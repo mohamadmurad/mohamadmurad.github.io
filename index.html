@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mohamad Murad — Senior Backend Developer</title>
+<meta name="description" content="Mohamad Murad — Senior Backend Developer specializing in the Laravel ecosystem: multi-tenant SaaS, ledger-based transaction architecture, payment gateway integrations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F1826;
+    --ink-2:#0A1119;
+    --panel:#141F30;
+    --paper:#F2EEE2;
+    --text:#E7E2D3;
+    --muted:#8B93A6;
+    --muted-2:#5C6478;
+    --amber:#C98A3B;
+    --amber-soft:rgba(201,138,59,0.14);
+    --green:#5FA87A;
+    --rule:rgba(231,226,211,0.11);
+    --rule-strong:rgba(231,226,211,0.22);
+    --radius:2px;
+    --maxw:920px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:inherit;}
+  ::selection{background:var(--amber); color:var(--ink-2);}
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:3px;
+  }
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- Background ledger lines ---------- */
+  .bg-lines{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 37px,
+      var(--rule) 37px,
+      var(--rule) 38px
+    );
+    opacity:0.5;
+    mask-image: linear-gradient(to bottom, transparent, black 8%, black 92%, transparent);
+  }
+
+  /* ---------- Nav ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:20;
+    background:rgba(15,24,38,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--rule);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:16px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{
+    font-family:'Fraunces',serif; font-weight:600; font-size:1.05rem;
+    letter-spacing:0.01em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .brand .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 0 3px rgba(95,168,122,0.18);
+  }
+  nav.links{display:flex; gap:26px;}
+  nav.links a{
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem;
+    text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--muted); text-decoration:none;
+    transition:color 0.2s ease;
+  }
+  nav.links a:hover{color:var(--amber);}
+  .nav-toggle{display:none;}
+
+  @media (max-width:640px){
+    nav.links{display:none;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; z-index:1;
+    padding:96px 0 72px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem;
+    letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--amber); margin:0 0 18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:''; width:22px; height:1px; background:var(--amber);
+  }
+
+  .terminal{
+    background:var(--ink-2);
+    border:1px solid var(--rule-strong);
+    border-radius:6px;
+    padding:18px 22px;
+    margin-bottom:34px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.85rem;
+    color:var(--muted);
+    max-width:560px;
+    box-shadow:0 20px 50px -20px rgba(0,0,0,0.6);
+  }
+  .terminal .term-head{
+    display:flex; gap:6px; margin-bottom:14px;
+  }
+  .term-head span{width:9px; height:9px; border-radius:50%; background:var(--rule-strong);}
+  .terminal .line{white-space:pre; overflow:hidden; border-right:2px solid transparent;}
+  .terminal .line.type{
+    animation: reveal 0s forwards;
+  }
+  #term-l1{color:var(--muted-2);}
+  #term-l2{color:var(--text);}
+  #term-l3{color:var(--green);}
+  .cursor{display:inline-block; width:7px; height:1em; background:var(--amber); vertical-align:-2px; animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  h1.headline{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(2.1rem, 5vw, 3.4rem);
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    margin:0 0 22px;
+    max-width:15ch;
+  }
+  h1.headline em{
+    font-style:italic; color:var(--amber); font-weight:500;
+  }
+
+  .lede{
+    color:var(--muted); font-size:1.05rem; max-width:56ch; margin:0 0 34px;
+  }
+
+  .cta-row{display:flex; flex-wrap:wrap; gap:14px; margin-bottom:8px;}
+  .btn{
+    font-family:'JetBrains Mono',monospace; font-size:0.82rem;
+    text-decoration:none; padding:12px 20px;
+    border-radius:3px; letter-spacing:0.02em;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:all 0.2s ease;
+    border:1px solid var(--rule-strong);
+  }
+  .btn.primary{background:var(--amber); color:var(--ink-2); border-color:var(--amber); font-weight:600;}
+  .btn.primary:hover{background:#dc9c4d;}
+  .btn.ghost{color:var(--text);}
+  .btn.ghost:hover{border-color:var(--amber); color:var(--amber);}
+
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:24px; margin-top:38px;
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--muted-2);
+  }
+  .meta-row span{color:var(--muted);}
+
+  /* ---------- Section framing ---------- */
+  section{position:relative; z-index:1; padding:64px 0;}
+  section + section{border-top:1px solid var(--rule);}
+
+  .section-head{
+    display:flex; align-items:baseline; gap:16px; margin-bottom:40px;
+  }
+  .section-head .idx{
+    font-family:'JetBrains Mono',monospace; color:var(--amber-soft); font-size:0.85rem;
+    color:var(--amber);
+  }
+  .section-head h2{
+    font-family:'Fraunces',serif; font-weight:600; font-size:1.6rem; margin:0;
+  }
+  .section-head::after{
+    content:''; flex:1; height:1px; background:var(--rule);
+  }
+
+  /* ---------- About ---------- */
+  .about-grid{
+    display:grid; grid-template-columns:1.4fr 1fr; gap:52px;
+  }
+  .about-grid p{color:var(--muted); margin:0 0 16px; max-width:60ch;}
+  .about-grid p strong{color:var(--text); font-weight:500;}
+
+  .stat-card{
+    border:1px solid var(--rule); border-radius:4px; padding:18px 20px; margin-bottom:14px;
+    background:var(--panel);
+  }
+  .stat-card .num{
+    font-family:'Fraunces',serif; font-size:2rem; color:var(--amber); line-height:1;
+  }
+  .stat-card .label{
+    font-family:'JetBrains Mono',monospace; font-size:0.72rem; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--muted-2); margin-top:6px;
+  }
+
+  @media (max-width:760px){ .about-grid{grid-template-columns:1fr;} }
+
+  /* ---------- Ledger / Experience ---------- */
+  .ledger{border-top:1px solid var(--rule);}
+  .entry{
+    display:grid; grid-template-columns:64px 130px 1fr; gap:22px;
+    padding:30px 0; border-bottom:1px solid var(--rule);
+    align-items:start;
+  }
+  .entry .no{
+    font-family:'JetBrains Mono',monospace; color:var(--muted-2); font-size:0.82rem; padding-top:4px;
+  }
+  .entry .when{
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--amber); padding-top:4px;
+    line-height:1.5;
+  }
+  .entry .when .dur{display:block; color:var(--muted-2); margin-top:4px;}
+  .entry .role{
+    font-family:'Fraunces',serif; font-size:1.2rem; font-weight:600; margin:0 0 3px;
+  }
+  .entry .org{
+    font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--muted); margin-bottom:14px;
+  }
+  .entry .org .loc{color:var(--muted-2);}
+  .entry ul{margin:0; padding-left:18px; color:var(--muted);}
+  .entry li{margin-bottom:7px;}
+  .entry li::marker{color:var(--amber);}
+
+  @media (max-width:640px){
+    .entry{grid-template-columns:1fr; gap:8px;}
+    .entry .no{display:none;}
+  }
+
+  /* ---------- Projects ---------- */
+  .proj-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+  }
+  @media (max-width:900px){ .proj-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:640px){ .proj-grid{grid-template-columns:1fr;} }
+
+  .card{
+    border:1px solid var(--rule); border-radius:4px; padding:22px;
+    background:var(--panel);
+    display:flex; flex-direction:column; height:100%;
+    transition:border-color 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover{border-color:var(--rule-strong); transform:translateY(-2px);}
+  .card .tag{
+    font-family:'JetBrains Mono',monospace; font-size:0.68rem; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--green); margin-bottom:12px;
+  }
+  .card.internal .tag{color:var(--muted-2);}
+  .card h3{
+    font-family:'Fraunces',serif; font-size:1.15rem; margin:0 0 10px; font-weight:600;
+  }
+  .card p{color:var(--muted); font-size:0.92rem; margin:0 0 18px; flex:1;}
+  .card .link{
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--amber);
+    text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+  }
+  .card .link:hover{text-decoration:underline;}
+  .card .noLink{
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--muted-2);
+  }
+
+  .subsection-label{
+    font-family:'JetBrains Mono',monospace; font-size:0.75rem; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--muted-2); margin:44px 0 18px;
+  }
+  .subsection-label:first-child{margin-top:0;}
+
+  /* ---------- Skills ---------- */
+  .skills-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:34px 48px;
+  }
+  @media (max-width:640px){ .skills-grid{grid-template-columns:1fr;} }
+  .skill-group .cat{
+    font-family:'JetBrains Mono',monospace; font-size:0.72rem; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--amber); margin-bottom:12px;
+  }
+  .chips{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--text);
+    border:1px solid var(--rule-strong); border-radius:3px; padding:6px 11px;
+  }
+
+  /* ---------- Education ---------- */
+  .edu-row{
+    display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;
+    padding:20px 0; border-bottom:1px solid var(--rule);
+  }
+  .edu-row .school{font-family:'Fraunces',serif; font-size:1.1rem; font-weight:600;}
+  .edu-row .deg{color:var(--muted); font-size:0.92rem;}
+  .edu-row .when{font-family:'JetBrains Mono',monospace; color:var(--muted-2); font-size:0.8rem;}
+
+  /* ---------- Footer / Contact ---------- */
+  footer{
+    position:relative; z-index:1;
+    padding:70px 0 50px;
+    border-top:1px solid var(--rule);
+  }
+  footer h2{
+    font-family:'Fraunces',serif; font-size:2rem; font-weight:600; margin:0 0 18px;
+    max-width:16ch;
+  }
+  footer p{color:var(--muted); max-width:48ch; margin:0 0 30px;}
+  .contact-list{
+    display:flex; flex-wrap:wrap; gap:28px; margin-bottom:40px;
+  }
+  .contact-list a{
+    font-family:'JetBrains Mono',monospace; font-size:0.88rem; text-decoration:none;
+    color:var(--text); border-bottom:1px solid var(--rule-strong); padding-bottom:2px;
+  }
+  .contact-list a:hover{color:var(--amber); border-color:var(--amber);}
+  .foot-bottom{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--muted-2);
+    padding-top:26px; border-top:1px solid var(--rule);
+  }
+
+  /* reveal on scroll */
+  .reveal{opacity:0; transform:translateY(14px); transition:opacity 0.6s ease, transform 0.6s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="bg-lines"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand"><span class="dot"></span> Mohamad Murad</div>
+    <nav class="links">
+      <a href="#about">About</a>
+      <a href="#experience">Ledger</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Damascus, Syria · Open to backend roles</p>
+
+      <div class="terminal">
+        <div class="term-head"><span></span><span></span><span></span></div>
+        <div id="term-l1" class="line mono"></div>
+        <div id="term-l2" class="line mono"></div>
+        <div id="term-l3" class="line mono"></div>
+      </div>
+
+      <h1 class="headline">Backend systems that keep <em>an honest ledger.</em></h1>
+      <p class="lede">Senior backend developer with 6+ years in the Laravel ecosystem — architecting multi-tenant SaaS platforms, replacing fragile real-time engines with ledger-based transaction systems, and keeping high-traffic ERPs fast under load.</p>
+
+      <div class="cta-row">
+        <a class="btn primary" href="mailto:mhdite7@gmail.com">Email me →</a>
+        <a class="btn ghost" href="https://github.com/mohamadmurad" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn ghost" href="tel:+963960602327">+963 960 602 327</a>
+      </div>
+
+      <div class="meta-row">
+        <div><span>Role</span> · Senior Backend Developer</div>
+        <div><span>Stack</span> · Laravel / PHP / MySQL</div>
+        <div><span>Based in</span> · Damascus, Syria</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head"><span class="idx">§1</span><h2>About</h2></div>
+      <div class="about-grid reveal">
+        <div>
+          <p><strong>Result-driven senior backend developer</strong> specializing in the Laravel ecosystem, with a track record of architecting multi-tenant SaaS platforms and modular package systems for internal engineering teams.</p>
+          <p>Most recently at OSOSS, migrated a real-time leave-calculation engine to a <strong>ledger-based transaction architecture</strong> inside a core ERP — trading fragile live math for an auditable, append-only source of truth. Led the MPGS payment gateway upgrade from v78 to v100 without interrupting live payment processing, and resolved recurring database bottlenecks through query optimization and caching.</p>
+          <p>Comfortable owning a problem end to end: schema design, API contracts, performance tuning, and the judgment call on when a system needs re-architecting rather than another patch.</p>
+        </div>
+        <div>
+          <div class="stat-card"><div class="num">6+</div><div class="label">Years of professional experience</div></div>
+          <div class="stat-card"><div class="num">3</div><div class="label">Companies · Damascus & Kuwait</div></div>
+          <div class="stat-card"><div class="num">v78→v100</div><div class="label">MPGS payment gateway migration, zero downtime</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <div class="section-head"><span class="idx">§2</span><h2>Experience — the ledger</h2></div>
+
+      <div class="ledger reveal">
+        <article class="entry">
+          <div class="no mono">003</div>
+          <div class="when">Feb 2023 – Jul 2026<span class="dur">Kuwait</span></div>
+          <div>
+            <h3 class="role">Backend Developer</h3>
+            <div class="org">OSOSS <span class="loc">· Multi-tenant SaaS HR / ERP</span></div>
+            <ul>
+              <li>Engineered and maintained a multi-tenant SaaS HR system in Laravel, ensuring scalable data isolation between tenants.</li>
+              <li>Architected the migration of a real-time leave-calculation engine to a ledger-based transaction architecture within the core ERP.</li>
+              <li>Led the MPGS payment gateway integration and major version upgrade (v78 → v100) with no disruption to live payment processing.</li>
+              <li>Optimized complex database queries and implemented caching strategies, cutting server response time and resolving critical bottlenecks.</li>
+              <li>Built custom, reusable Laravel packages to modularize ERP functionality across internal teams.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="no mono">002</div>
+          <div class="when">Apr 2021 – Feb 2023<span class="dur">1y 10m</span></div>
+          <div>
+            <h3 class="role">Full Stack Developer</h3>
+            <div class="org">UCG <span class="loc">· Damascus, Syria</span></div>
+            <ul>
+              <li>Designed and implemented system architectures with Laravel.</li>
+              <li>Built a Laravel API wrapper for WHMCS, enabling mobile app integration through standardized REST endpoints.</li>
+              <li>Delivered a KYC system for Abu Dhabi Ports.</li>
+              <li>Created and maintained multiple client web applications.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="no mono">001</div>
+          <div class="when">Sep 2020 – Mar 2021<span class="dur">7m</span></div>
+          <div>
+            <h3 class="role">Web Developer</h3>
+            <div class="org">Al-Homsi Group <span class="loc">· Damascus, Syria</span></div>
+            <ul>
+              <li>Developed a custom Laravel CRM application for customer relationship management.</li>
+              <li>Shipped feature additions and resolved complex legacy issues to improve stability.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-head"><span class="idx">§3</span><h2>Projects</h2></div>
+
+      <p class="subsection-label">Freelance — live</p>
+      <div class="proj-grid reveal">
+        <div class="card">
+          <div class="tag">● Live</div>
+          <h3>Farabi Virtual School</h3>
+          <p>Responsive frontend and landing page for a virtual school, built to introduce the institution and its programs to prospective students.</p>
+          <a class="link" href="https://www.farabivirtualschool.com" target="_blank" rel="noopener">farabivirtualschool.com ↗</a>
+        </div>
+        <div class="card">
+          <div class="tag">● Live</div>
+          <h3>Know How Academy</h3>
+          <p>Full-stack educational platform with a student/trainer portal — exam management, grading, and digital certification, built end to end.</p>
+          <a class="link" href="https://knowhowacademy.co.uk" target="_blank" rel="noopener">knowhowacademy.co.uk ↗</a>
+        </div>
+        <div class="card">
+          <div class="tag">● Live</div>
+          <h3>Sanabel — Agricultural Market</h3>
+          <p>Syria's first dedicated agricultural marketplace, connecting buyers and sellers in the agricultural sector.</p>
+          <a class="link" href="http://sanabel-sy.com" target="_blank" rel="noopener">sanabel-sy.com ↗</a>
+        </div>
+      </div>
+
+      <p class="subsection-label">Client work — case studies</p>
+      <div class="proj-grid reveal">
+        <div class="card internal">
+          <div class="tag">Case study</div>
+          <h3>OSOSS ERP</h3>
+          <p>Backend modules for an enterprise ERP — payment gateway upgrades, data-isolation strategy, and the leave-ledger migration.</p>
+          <span class="noLink">Internal system — OSOSS</span>
+        </div>
+        <div class="card internal">
+          <div class="tag">Case study</div>
+          <h3>Portal API Wrapper</h3>
+          <p>A Laravel wrapper around WHMCS, exposing standardized RESTful endpoints for seamless mobile app integration.</p>
+          <span class="noLink">Internal system — UCG</span>
+        </div>
+        <div class="card internal">
+          <div class="tag">Case study</div>
+          <h3>KYC for AD Ports</h3>
+          <p>KYC verification system built for Abu Dhabi Ports in Laravel.</p>
+          <span class="noLink">Internal system — UCG</span>
+        </div>
+        <div class="card internal">
+          <div class="tag">Case study</div>
+          <h3>Teslam QR</h3>
+          <p>End-to-end delivery: analysis, database design, and backend/frontend development for a CodeIgniter QR platform.</p>
+          <span class="noLink">Internal system — UCG</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <div class="section-head"><span class="idx">§4</span><h2>Skills</h2></div>
+      <div class="skills-grid reveal">
+        <div class="skill-group">
+          <div class="cat">Back end</div>
+          <div class="chips">
+            <span class="chip">PHP</span><span class="chip">Laravel</span><span class="chip">CodeIgniter</span>
+            <span class="chip">RESTful APIs</span><span class="chip">Inertia.js</span>
+            <span class="chip">Laravel Package Development</span><span class="chip">Performance Optimization</span>
+            <span class="chip">System Architecture</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="cat">Database</div>
+          <div class="chips">
+            <span class="chip">MySQL</span><span class="chip">Database Design</span><span class="chip">Query Tuning</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="cat">Front end</div>
+          <div class="chips">
+            <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span>
+            <span class="chip">React</span><span class="chip">Bootstrap</span><span class="chip">Tailwind</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="cat">Tools &amp; other</div>
+          <div class="chips">
+            <span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">GitLab</span>
+            <span class="chip">WHMCS</span><span class="chip">Claude (AI)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="wrap">
+      <div class="section-head"><span class="idx">§5</span><h2>Education</h2></div>
+      <div class="reveal">
+        <div class="edu-row">
+          <div>
+            <div class="school">Damascus University</div>
+            <div class="deg">B.Sc. in Information Technology Engineering</div>
+          </div>
+          <div class="when mono">2015 – 2020</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="section-head"><span class="idx">§6</span><h2 style="font-size:1.6rem; margin:0;">Contact</h2></div>
+    <h2>Let's close the ledger on your next backend hire.</h2>
+    <p>Open to backend and full-stack roles in the Laravel ecosystem — remote or relocation. Reach out directly, no recruiter maze.</p>
+    <div class="contact-list">
+      <a href="mailto:mhdite7@gmail.com">mhdite7@gmail.com</a>
+      <a href="tel:+963960602327">+963 960 602 327</a>
+      <a href="https://github.com/mohamadmurad" target="_blank" rel="noopener">github.com/mohamadmurad</a>
+    </div>
+    <div class="foot-bottom">
+      <span>Mohamad Murad — Backend Developer</span>
+      <span>Damascus, Syria</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Terminal type sequence
+  const lines = [
+    { el: document.getElementById('term-l1'), text: '$ whoami', speed: 45 },
+    { el: document.getElementById('term-l2'), text: 'Mohamad Murad — Senior Backend Developer', speed: 22 },
+    { el: document.getElementById('term-l3'), text: '✓ status: 6+ years · Laravel ecosystem · ready to ship', speed: 18 }
+  ];
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function typeLine(i){
+    if(i >= lines.length) return;
+    const {el, text, speed} = lines[i];
+    if(reduced){ el.textContent = text; typeLine(i+1); return; }
+    let c = 0;
+    el.textContent = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    function step(){
+      if(c <= text.length){
+        el.textContent = text.slice(0, c);
+        el.appendChild(cursor);
+        c++;
+        setTimeout(step, speed);
+      } else {
+        if(i === lines.length - 1){
+          // leave cursor blinking on last line
+        } else {
+          el.removeChild(cursor);
+        }
+        typeLine(i+1);
+      }
+    }
+    step();
+  }
+  typeLine(0);
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
